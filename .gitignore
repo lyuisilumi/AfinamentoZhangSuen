@@ -131,3 +131,8 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+*.db
+.vs/ProcessamentoImagens/FileContentIndex/a0f89664-1c26-4e01-9cc1-d13de635e4fe.vsidx
+.vs/ProcessamentoImagens/v17/DocumentLayout.json
+ProcessamentoImagens/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+ProcessamentoImagens/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
