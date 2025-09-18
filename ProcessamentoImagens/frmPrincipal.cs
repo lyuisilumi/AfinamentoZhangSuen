@@ -27,7 +27,8 @@ namespace ProcessamentoImagens
             {
                 image = Image.FromFile(openFileDialog.FileName);
                 pictBoxImg1.Image = image;
-                pictBoxImg1.SizeMode = PictureBoxSizeMode.Normal;
+                pictBoxImg1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictBoxImg2.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
 
@@ -75,6 +76,12 @@ namespace ProcessamentoImagens
             imageBitmap = (Bitmap)image;
             Filtros.pretoeBranco(imageBitmap, imgDest);//transforma em preto e branco
             imageBitmap = imgDest;
+            //afinamento
+            pictBoxImg1.Image = imageBitmap;
+            imgDest = new Bitmap(imageBitmap);
+            Filtros.ZhangSuen(imageBitmap, imgDest);
+            pictBoxImg2.Image = imgDest;
+            imgDest.Save("afinado.png", ImageFormat.Png);
         }
     }
 }

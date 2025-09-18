@@ -9,6 +9,10 @@ namespace ProcessamentoImagens
 {
     class Filtros
     {
+        struct Ponto
+        {
+            public int x, y;
+        }
         //sem acesso direto a memoria
         public static void convert_to_gray(Bitmap imageBitmapSrc, Bitmap imageBitmapDest)
         {
@@ -203,6 +207,177 @@ namespace ProcessamentoImagens
             }
             sourceBitmap.UnlockBits(bitmapDataSrc);
             imageBitmapDest.UnlockBits(bitmapDataDest);
+        }
+
+        public static void ZhangSuen(Bitmap imageBitmapSrc, Bitmap imageBitmapDest)
+        {
+            int width = imageBitmapSrc.Width;
+            int height = imageBitmapSrc.Height;
+            int pixelSize = 3;
+
+            // Lock bits for the source and destination bitmaps
+            BitmapData bitmapDataSrc = imageBitmapSrc.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData bitmapDataDest = imageBitmapDest.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+            int stride = bitmapDataSrc.Stride;
+            int padding = bitmapDataSrc.Stride - (width * pixelSize);
+
+            unsafe
+            {
+                byte* dst = (byte*)bitmapDataDest.Scan0.ToPointer();
+
+                bool afinando = true;
+                while (afinando)
+                {
+                    afinando = false;
+ 
+                    List<Ponto> remPoints = new List<Ponto>(); 
+                    for (int y = 1; y < height - 1; y++)
+                    {
+                        for (int x = 1; x < width - 1; x++)
+                        {
+                            if (preto(dst, x, y, stride))
+                            {
+                                int conect = calcConectividade(dst, x, y, stride);
+                                if (conect == 1)
+                                {
+                                    int vizinhos = totVizinhos(dst, x, y, stride);
+                                    if (vizinhos >= 2 && vizinhos <= 6)
+                                    {
+                                        if (branco(dst, x, y - 1, stride) || branco(dst, x + 1, y, stride) || branco(dst, x, y + 1, stride))
+                                        {
+                                            if (branco(dst, x + 1, y, stride) || branco(dst, x, y + 1, stride) || branco(dst, x - 1, y, stride))
+                                                remPoints.Add(new Ponto { x = x, y = y });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (remPoints.Count > 0)
+                    {
+                        foreach (var pixel in remPoints)
+                        {
+                            int index = (pixel.y * stride) + (pixel.x * pixelSize);
+                            dst[index] = 255;       // B
+                            dst[index + 1] = 255;   // G
+                            dst[index + 2] = 255;   // R
+                        }
+                        remPoints.Clear();
+                        afinando = true;
+                    }
+ 
+                    for (int y = 1; y < height - 1; y++)
+                    {
+                        for (int x = 1; x < width - 1; x++)
+                        {
+                            if (preto(dst, x, y, stride))
+                            {
+                                int conect = calcConectividade(dst, x, y, stride);
+                                if (conect == 1)
+                                {
+                                    int vizinhos = totVizinhos(dst, x, y, stride);
+                                    if (vizinhos >= 2 && vizinhos <= 6)
+                                    {
+                                        if (branco(dst, x, y - 1, stride) || branco(dst, x + 1, y, stride) || branco(dst, x - 1, y, stride))
+                                        {
+                                            if (branco(dst, x - 1, y, stride) || branco(dst, x, y + 1, stride) || branco(dst, x, y - 1, stride))
+                                                remPoints.Add(new Ponto { x = x, y = y });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (remPoints.Count > 0)
+                    {
+                        foreach (var pixel in remPoints)
+                        {
+                            int index = (pixel.y * stride) + (pixel.x * pixelSize);
+                            dst[index] = 255;       // B
+                            dst[index + 1] = 255;   // G
+                            dst[index + 2] = 255;   // R
+                        }
+                        remPoints.Clear();
+                        afinando = true;
+                    }
+                }
+
+                imageBitmapSrc.UnlockBits(bitmapDataSrc);
+                imageBitmapDest.UnlockBits(bitmapDataDest);
+            }
+        }
+        private unsafe static bool preto(byte* src, int x, int y, int stride)
+        {
+            int index = (y * stride) + (x * 3);
+            byte b = src[index];
+            byte g = src[index + 1];
+            byte r = src[index + 2];
+            return (r + g + b) / 3 == 0;
+        }
+
+        private unsafe static bool branco(byte* src, int x, int y, int stride)
+        {
+            int index = (y * stride) + (x * 3);
+            byte b = src[index];
+            byte g = src[index + 1];
+            byte r = src[index + 2];
+            return (r + g + b) / 3 == 255;
+        }
+
+        private unsafe static int calcConectividade(byte* src, int i, int j, int stride)
+        {
+            int conectividade = 0;
+            int tamanho = 8;
+
+            bool[] vetorPixel = new bool[tamanho];
+            carregaMatriz(src, vetorPixel, i, j, stride);
+
+            for (int k = 0; k < tamanho - 1; k++)
+            {
+                if (vetorPixel[k] && !vetorPixel[k + 1])
+                {
+                    conectividade++;
+                }
+            }
+            if (vetorPixel[7] && !vetorPixel[0])
+                conectividade++;
+
+            return conectividade;
+        }
+
+        private unsafe static int totVizinhos(byte* src, int x, int y, int stride)
+        {
+            int vizinhos = 0;
+            int tamanho = 8;
+
+            bool[] vetorPixel = new bool[tamanho];
+            carregaMatriz(src, vetorPixel, x, y, stride);
+
+            for (int k = 0; k < tamanho; k++)
+            {
+                if (vetorPixel[k])
+                {
+                    vizinhos++;
+                }
+            }
+
+            return vizinhos;
+        }
+        private unsafe static void carregaMatriz(byte* src, bool[] vetorDePonto, int x, int y, int stride)
+        {
+            vetorDePonto[0] = preto(src, x, y - 1, stride);
+            vetorDePonto[1] = preto(src, x + 1, y - 1, stride);
+            vetorDePonto[2] = preto(src, x + 1, y, stride);
+            vetorDePonto[3] = preto(src, x + 1, y + 1, stride);
+            vetorDePonto[4] = preto(src, x, y + 1, stride);
+            vetorDePonto[5] = preto(src, x - 1, y + 1, stride);
+            vetorDePonto[6] = preto(src, x - 1, y, stride);
+            vetorDePonto[7] = preto(src, x - 1, y - 1, stride);
         }
     }
 }
