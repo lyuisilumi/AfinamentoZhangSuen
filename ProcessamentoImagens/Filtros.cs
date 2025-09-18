@@ -151,5 +151,58 @@ namespace ProcessamentoImagens
             //unlock imagem destino
             imageBitmapDest.UnlockBits(bitmapDataDst);
         }
+
+        public static void pretoeBranco(Bitmap sourceBitmap, Bitmap imageBitmapDest)
+        {
+            int width = sourceBitmap.Width;
+            int height = sourceBitmap.Height;
+            int pixelSize = 3;
+
+            BitmapData bitmapDataSrc = sourceBitmap.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData bitmapDataDest = imageBitmapDest.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
+            int srcStride = bitmapDataSrc.Stride;
+            int dstStride = bitmapDataDest.Stride;
+
+            unsafe
+            {
+                byte* src = (byte*)bitmapDataSrc.Scan0.ToPointer();
+                byte* dst = (byte*)bitmapDataDest.Scan0.ToPointer();
+                byte threshold = 221;
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        int srcIndex = (y * srcStride) + (x * pixelSize);
+                        int dstIndex = (y * dstStride) + (x * pixelSize);
+
+                        byte b = src[srcIndex];
+                        byte g = src[srcIndex + 1];
+                        byte r = src[srcIndex + 2];
+
+                        int gray = (int)(0.299 * r + 0.587 * g + 0.114 * b);
+
+
+                        if (gray >= threshold)
+                        {
+                            dst[dstIndex] = 255;
+                            dst[dstIndex + 1] = 255;
+                            dst[dstIndex + 2] = 255;
+                        }
+                        else
+                        {
+                            dst[dstIndex] = 0;
+                            dst[dstIndex + 1] = 0;
+                            dst[dstIndex + 2] = 0;
+                        }
+                    }
+                }
+            }
+            sourceBitmap.UnlockBits(bitmapDataSrc);
+            imageBitmapDest.UnlockBits(bitmapDataDest);
+        }
     }
 }

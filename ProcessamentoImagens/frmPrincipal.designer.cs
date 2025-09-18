@@ -37,6 +37,7 @@
             this.btnLuminanciaComDMA = new System.Windows.Forms.Button();
             this.btnNegativoComDMA = new System.Windows.Forms.Button();
             this.btnNegativoSemDMA = new System.Windows.Forms.Button();
+            this.afinamentoZang = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictBoxImg1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBoxImg2)).BeginInit();
             this.SuspendLayout();
@@ -119,11 +120,22 @@
             this.btnNegativoSemDMA.UseVisualStyleBackColor = true;
             this.btnNegativoSemDMA.Click += new System.EventHandler(this.btnNegativoSemDMA_Click);
             // 
+            // afinamentoZang
+            // 
+            this.afinamentoZang.Location = new System.Drawing.Point(647, 513);
+            this.afinamentoZang.Name = "afinamentoZang";
+            this.afinamentoZang.Size = new System.Drawing.Size(208, 22);
+            this.afinamentoZang.TabIndex = 112;
+            this.afinamentoZang.Text = "Afinamento";
+            this.afinamentoZang.UseVisualStyleBackColor = true;
+            this.afinamentoZang.Click += new System.EventHandler(this.afinamentoZang_Click);
+            // 
             // frmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1220, 608);
+            this.Controls.Add(this.afinamentoZang);
             this.Controls.Add(this.btnNegativoComDMA);
             this.Controls.Add(this.btnNegativoSemDMA);
             this.Controls.Add(this.btnLuminanciaComDMA);
@@ -152,6 +164,7 @@
         private System.Windows.Forms.Button btnLuminanciaComDMA;
         private System.Windows.Forms.Button btnNegativoComDMA;
         private System.Windows.Forms.Button btnNegativoSemDMA;
+        private System.Windows.Forms.Button afinamentoZang;
     }
 }
 

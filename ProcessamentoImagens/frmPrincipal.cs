@@ -68,5 +68,13 @@ namespace ProcessamentoImagens
             Filtros.negativoDMA(imageBitmap, imgDest);
             pictBoxImg2.Image = imgDest;
         }
+
+        private void afinamentoZang_Click(object sender, EventArgs e)
+        {
+            Bitmap imgDest = new Bitmap(image);
+            imageBitmap = (Bitmap)image;
+            Filtros.pretoeBranco(imageBitmap, imgDest);//transforma em preto e branco
+            imageBitmap = imgDest;
+        }
     }
 }
