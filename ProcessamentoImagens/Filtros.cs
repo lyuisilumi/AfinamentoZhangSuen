@@ -232,8 +232,8 @@ namespace ProcessamentoImagens
                 while (afinando)
                 {
                     afinando = false;
- 
-                    List<Ponto> remPoints = new List<Ponto>(); 
+
+                    List<Ponto> remPoints = new List<Ponto>();
                     for (int y = 1; y < height - 1; y++)
                     {
                         for (int x = 1; x < width - 1; x++)
@@ -269,7 +269,7 @@ namespace ProcessamentoImagens
                         remPoints.Clear();
                         afinando = true;
                     }
- 
+
                     for (int y = 1; y < height - 1; y++)
                     {
                         for (int x = 1; x < width - 1; x++)
@@ -485,6 +485,54 @@ namespace ProcessamentoImagens
             {
                 imagemDst.SetPixel(menorX, i, vermelho);
                 imagemDst.SetPixel(maiorX, i, vermelho);
+            }
+        }
+
+        public static void detectarBordasSobel(Bitmap imageBitmapSrc, Bitmap imageBitmapDst)
+        {
+            int width = imageBitmapSrc.Width;
+            int height = imageBitmapSrc.Height;
+
+            // Primeiro: converter para tons de cinza
+            Bitmap gray = new Bitmap(width, height);
+            convert_to_gray(imageBitmapSrc, gray);
+
+            int[,] Gx = {
+                { -1, 0, 1 },
+                { -2, 0, 2 },
+                { -1, 0, 1 }
+            };
+
+                    int[,] Gy = {
+                { -1, -2, -1 },
+                {  0,  0,  0 },
+                {  1,  2,  1 }
+            };
+
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    int sumX = 0;
+                    int sumY = 0;
+
+                    // Aplica a máscara 3x3
+                    for (int i = -1; i <= 1; i++)
+                    {
+                        for (int j = -1; j <= 1; j++)
+                        {
+                            int pixel = gray.GetPixel(x + j, y + i).R;
+                            sumX += pixel * Gx[i + 1, j + 1];
+                            sumY += pixel * Gy[i + 1, j + 1];
+                        }
+                    }
+
+                    int magnitude = (int)Math.Sqrt(sumX * sumX + sumY * sumY);
+                    if (magnitude > 255) magnitude = 255;
+
+                    Color newColor = Color.FromArgb(magnitude, magnitude, magnitude);
+                    imageBitmapDst.SetPixel(x, y, newColor);
+                }
             }
         }
     }
