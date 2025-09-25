@@ -379,5 +379,113 @@ namespace ProcessamentoImagens
             vetorDePonto[6] = preto(src, x - 1, y, stride);
             vetorDePonto[7] = preto(src, x - 1, y - 1, stride);
         }
+
+        public static void quadrado(Bitmap imagemSrc, Bitmap imagemDst)
+        {
+            int width = imagemSrc.Width;
+            int height = imagemSrc.Height;
+
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    int menorX = x, maiorX = x, menorY = y, maiorY = y;
+                    if (imagemSrc.GetPixel(x + 1, y).B == 0 && imagemSrc.GetPixel(x, y).B == 255)
+                    {
+                        imagemSrc.SetPixel(x, y, Color.Gray);
+                        imagemDst.SetPixel(x, y, Color.Black);
+                        bool flag;
+                        do
+                        {
+                            flag = false;
+                            if (imagemSrc.GetPixel(x + 1, y).B == 255 && imagemSrc.GetPixel(x + 1, y - 1).B == 0)
+                            { // o da frente eh branco e o da diagonal eh preto
+                                x++;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x + 1, y - 1).B == 255 && imagemSrc.GetPixel(x, y - 1).B == 0 && imagemSrc.GetPixel(x + 1, y).B != 0)
+                            { // diagonal eh branco e o de cima eh preto e o da frente n eh preto
+                                x++;
+                                y--;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x, y - 1).B == 255 && imagemSrc.GetPixel(x - 1, y - 1).B == 0)
+                            { //o de cima eh branco e o da diagonal eh preto 
+                                y--;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x - 1, y - 1).B == 255 && imagemSrc.GetPixel(x - 1, y).B == 0 && imagemSrc.GetPixel(x, y - 1).B != 0)
+                            { // diagonal eh branco e o de tras eh preto
+                                x--;
+                                y--;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x - 1, y).B == 255 && imagemSrc.GetPixel(x - 1, y + 1).B == 0)
+                            { // o de tras eh branco e a diagonal de baixo eh preta
+                                x--;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x - 1, y + 1).B == 255 && imagemSrc.GetPixel(x, y + 1).B == 0 && imagemSrc.GetPixel(x - 1, y).B != 0)
+                            {// o da diagonal de baixo eh branco e o de baixo eh preto
+                                x--;
+                                y++;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x, y + 1).B == 255 && imagemSrc.GetPixel(x + 1, y + 1).B == 0)
+                            { // o de baixo eh branco e o da diagonal da direita de baixo eh preto
+                                y++;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            else if (imagemSrc.GetPixel(x + 1, y + 1).B == 255 && imagemSrc.GetPixel(x + 1, y).B == 0 && imagemSrc.GetPixel(x, y + 1).B != 0)
+                            { // o da diagonal da direita de baixo eh branco e o de cima eh 
+                                x++;
+                                y++;
+                                imagemSrc.SetPixel(x, y, Color.Gray);
+                                imagemDst.SetPixel(x, y, Color.Black);
+                                flag = true;
+                            }
+                            maiorX = Math.Max(maiorX, x);
+                            menorX = Math.Min(menorX, x);
+                            maiorY = Math.Max(maiorY, y);
+                            menorY = Math.Min(menorY, y);
+
+                        } while (flag);
+                        DesenharRetangulo(imagemDst, menorX, maiorX, menorY, maiorY);
+                    }
+                }
+            }
+
+        }
+
+
+        private static void DesenharRetangulo(Bitmap imagemDst, int menorX, int maiorX, int menorY, int maiorY)
+        {
+            Color vermelho = Color.FromArgb(255, 1, 1);
+            for (int i = menorX; i <= maiorX; i++)
+            {
+                imagemDst.SetPixel(i, menorY, vermelho);
+                imagemDst.SetPixel(i, maiorY, vermelho);
+            }
+
+            for (int i = menorY; i <= maiorY; i++)
+            {
+                imagemDst.SetPixel(menorX, i, vermelho);
+                imagemDst.SetPixel(maiorX, i, vermelho);
+            }
+        }
     }
 }

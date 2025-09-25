@@ -83,5 +83,26 @@ namespace ProcessamentoImagens
             pictBoxImg2.Image = imgDest;
             imgDest.Save("afinado.png", ImageFormat.Png);
         }
+
+        private void quadrado_Click(object sender, EventArgs e)
+        {
+            Bitmap imgDest = new Bitmap(image);
+            imageBitmap = (Bitmap)image;
+            Filtros.pretoeBranco(imageBitmap, imgDest);
+            imageBitmap = imgDest;
+            pictBoxImg1.Image = imageBitmap;
+            imgDest = new Bitmap(imageBitmap);
+            Filtros.ZhangSuen(imageBitmap, imgDest);
+            pictBoxImg1.Image = imgDest;
+
+            imgDest = new Bitmap(imageBitmap.Width, imageBitmap.Height);
+            using (Graphics g = Graphics.FromImage(imgDest))
+            {
+                g.Clear(Color.White);
+            }
+            Filtros.quadrado(imageBitmap, imgDest);
+            pictBoxImg2.Image = imgDest;
+            imgDest.Save("quadrado.png", ImageFormat.Png);
+        }
     }
 }

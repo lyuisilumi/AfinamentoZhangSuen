@@ -38,6 +38,7 @@
             this.btnNegativoComDMA = new System.Windows.Forms.Button();
             this.btnNegativoSemDMA = new System.Windows.Forms.Button();
             this.afinamentoZang = new System.Windows.Forms.Button();
+            this.quadrado = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictBoxImg1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictBoxImg2)).BeginInit();
             this.SuspendLayout();
@@ -130,11 +131,22 @@
             this.afinamentoZang.UseVisualStyleBackColor = true;
             this.afinamentoZang.Click += new System.EventHandler(this.afinamentoZang_Click);
             // 
+            // quadrado
+            // 
+            this.quadrado.Location = new System.Drawing.Point(647, 541);
+            this.quadrado.Name = "quadrado";
+            this.quadrado.Size = new System.Drawing.Size(208, 23);
+            this.quadrado.TabIndex = 113;
+            this.quadrado.Text = "Quadrado";
+            this.quadrado.UseVisualStyleBackColor = true;
+            this.quadrado.Click += new System.EventHandler(this.quadrado_Click);
+            // 
             // frmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1220, 608);
+            this.Controls.Add(this.quadrado);
             this.Controls.Add(this.afinamentoZang);
             this.Controls.Add(this.btnNegativoComDMA);
             this.Controls.Add(this.btnNegativoSemDMA);
@@ -165,6 +177,7 @@
         private System.Windows.Forms.Button btnNegativoComDMA;
         private System.Windows.Forms.Button btnNegativoSemDMA;
         private System.Windows.Forms.Button afinamentoZang;
+        private System.Windows.Forms.Button quadrado;
     }
 }
 
