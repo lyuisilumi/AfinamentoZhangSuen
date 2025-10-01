@@ -81,7 +81,7 @@ namespace ProcessamentoImagens
             imgDest = new Bitmap(imageBitmap);
             Filtros.ZhangSuen(imageBitmap, imgDest);
             pictBoxImg2.Image = imgDest;
-            imgDest.Save("afinado.png", ImageFormat.Png);
+            imgDest.Save(@"..\..\imagens\afinamento.png", ImageFormat.Png);
         }
 
         private void quadrado_Click(object sender, EventArgs e)
@@ -102,7 +102,7 @@ namespace ProcessamentoImagens
             }
             Filtros.quadrado(imageBitmap, imgDest);
             pictBoxImg2.Image = imgDest;
-            imgDest.Save("quadrado.png", ImageFormat.Png);
+            imgDest.Save(@"..\..\imagens\quadrado.png", ImageFormat.Png);
         }
     }
 }
