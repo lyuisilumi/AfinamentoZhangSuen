@@ -93,6 +93,7 @@ namespace ProcessamentoImagens
             pictBoxImg1.Image = imageBitmap;
             imgDest = new Bitmap(imageBitmap);
             Filtros.ZhangSuen(imageBitmap, imgDest);
+            imageBitmap = new Bitmap(imgDest);
             pictBoxImg1.Image = imgDest;
 
             imgDest = new Bitmap(imageBitmap.Width, imageBitmap.Height);
